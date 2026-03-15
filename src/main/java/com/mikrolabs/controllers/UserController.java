@@ -9,7 +9,7 @@ public class UserController {
     UserService userService = new UserService();
 
     public User login(String email, String password) {
-        User user = userService.buscarPorEmail(email);
+        User user = userService.searchUserByEmail(email);
 
         if (user == null) {
             throw new UsuarioNaoEncontrado("Usuário não encontrado.");

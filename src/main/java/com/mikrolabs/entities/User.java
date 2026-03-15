@@ -1,23 +1,30 @@
 package com.mikrolabs.entities;
 
 public class User {
+    private int id;
     private String email;
     private String password;
     private String name;
     private String role;
 
     public User(User user) {
+        this.id = user.getId();
         this.email = user.getEmail();
         this.password = user.getPassword();
         this.name = user.getName();
         this.role = user.getRole();
     }
 
-    public User(String email, String password, String name, String role) {
+    public User(int id, String email, String password, String name, String role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.role = role;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -34,6 +41,10 @@ public class User {
 
     public String getRole() {
         return role;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setEmail(String email) {

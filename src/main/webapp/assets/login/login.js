@@ -91,6 +91,10 @@ form.addEventListener('submit', async (e) => {
 
   if (res.status === 200) {
     showToast('Login bem-sucedido!');
+  } else if (res.status === 401) {
+    showToast('Email ou senha incorretos. Tente novamente.');
+  } else if (res.status === 404) {
+    showToast('Usuário não encontrado.');
   } else {
     showToast('Erro no login. Verifique suas credenciais.');
   }

@@ -1,18 +1,15 @@
 package com.mikrolabs.services;
 
+import com.mikrolabs.DAO.UserDAO;
 import com.mikrolabs.entities.User;
 
 public class UserService {
+
+    private final UserDAO userDAO = new UserDAO();
     
 
-    public User buscarPorEmail(String email) { //Aqui seria a conexão com o banco de dados para buscar o usuário pelo email
-        if (email.equals("thomas.jefersson.vaz@gmail.com")) {
-            return new User("thomas.jefersson.vaz@gmail.com", "thomas123", "Thomas Jefersson Vaz", "admin");
-        } else if (email.equals("rafael@gmail.com")) {
-            return new User("rafael@gmail.com", "rafael123", "Rafael Martins", "user");
-        } else { 
-            return null;
-        }
+    public User searchUserByEmail(String email) { //Aqui seria a conexão com o banco de dados para buscar o usuário pelo email
+        return userDAO.searchUserByEmail(email).orElse(null);
     }
     
 
