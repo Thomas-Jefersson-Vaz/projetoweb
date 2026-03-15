@@ -18,7 +18,7 @@ html, body {
   font-family: 'DM Sans', sans-serif;
   background: var(--navy);
   color: var(--cream);
-  overflow: hidden;
+  overflow: auto;
 }
 
 /* ── BACKGROUND ── */
@@ -42,7 +42,7 @@ html, body {
   position: relative; z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 100vh;
+  min-height: 100vh; 
 }
 
 /* ── LEFT PANEL ── */

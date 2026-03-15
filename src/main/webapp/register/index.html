@@ -3,19 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-  <title>Mikrolabs Viagem 123 — Entrar</title>
+  <title>Mikrolabs Viagem 123 — Cadastro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/login/login.css" />
+  <link rel="stylesheet" href="assets/register/register.css" />
 </head>
 <body>
-
   <div class="bg-map"></div>
   <div class="bg-overlay"></div>
-
   <div class="split">
-
     <!-- LEFT PANEL -->
     <div class="panel-left">
       <div class="brand">
@@ -25,13 +22,11 @@
           <div class="brand-sub">Viagem 123</div>
         </div>
       </div>
-
       <div class="hero-text">
-        <p class="hero-tagline">Sua próxima</p>
-        <h1 class="hero-title">aventura<br/><em>começa aqui.</em></h1>
-        <p class="hero-desc">Planeje, reserve e explore destinos incríveis com total praticidade.</p>
+        <p class="hero-tagline">Junte-se a nós</p>
+        <h1 class="hero-title">crie sua<br/><em>conta grátis.</em></h1>
+        <p class="hero-desc">Cadastre-se e comece a planejar sua próxima aventura com total praticidade.</p>
       </div>
-
       <div class="destinations">
         <span class="dest-badge">🗼 Paris</span>
         <span class="dest-badge">🌴 Bali</span>
@@ -39,17 +34,22 @@
         <span class="dest-badge">🌊 Maldivas</span>
       </div>
     </div>
-
     <!-- RIGHT PANEL (FORM) -->
     <div class="panel-right">
       <div class="card">
         <div class="card-header">
-          <h2>Bem-vindo de volta</h2>
-          <p>Acesse sua conta para continuar</p>
+          <h2>Criar conta</h2>
+          <p>Preencha os dados para se cadastrar</p>
         </div>
-
-        <form id="loginForm" method="post" action="/login" novalidate>
-
+        <form id="registerForm" method="post" action="/register" novalidate>
+          <div class="field" id="field-name">
+            <label for="name">Nome completo</label>
+            <div class="input-wrap">
+              <input type="text" id="name" name="name" placeholder="Seu nome completo" autocomplete="name"/>
+              <span class="input-icon">👤</span>
+            </div>
+            <span class="field-error" id="error-name"></span>
+          </div>
           <div class="field" id="field-email">
             <label for="email">E-mail</label>
             <div class="input-wrap">
@@ -58,41 +58,34 @@
             </div>
             <span class="field-error" id="error-email"></span>
           </div>
-
           <div class="field" id="field-password">
             <label for="password">Senha</label>
             <div class="input-wrap">
-              <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password"/>
+              <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password"/>
               <button type="button" class="toggle-pw" id="togglePw" aria-label="Mostrar senha">👁</button>
             </div>
             <span class="field-error" id="error-password"></span>
           </div>
-
-          <div class="row-options">
-            <label class="remember">
-              <input type="checkbox" id="remember" />
-              <span class="check-box"></span>
-              Lembrar de mim
-            </label>
-            <a href="#" class="forgot">Esqueci a senha</a>
+          <div class="field" id="field-confirm">
+            <label for="confirm">Confirmar senha</label>
+            <div class="input-wrap">
+              <input type="password" id="confirm" name="confirm" placeholder="Repita sua senha" autocomplete="new-password"/>
+              <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Mostrar confirmação">👁</button>
+            </div>
+            <span class="field-error" id="error-confirm"></span>
           </div>
-
-          <button type="submit" class="btn-login" id="btnLogin">
-            <span class="btn-text">Entrar</span>
+          <button type="submit" class="btn-login" id="btnRegister">
+            <span class="btn-text">Cadastrar</span>
             <span class="btn-loader" id="btnLoader"></span>
           </button>
-
           <div class="divider"><span>ou</span></div>
-
           <div class="signup-row">
-            Não tem conta? <a href="/register">Cadastre-se</a>
+            Já tem conta? <a href="/login">Entrar</a>
           </div>
-
         </form>
       </div>
     </div>
-
   </div>
-    <script src="assets/login/login.js"></script>
+  <script src="assets/register/register.js"></script>
 </body>
 </html>
