@@ -1,49 +1,56 @@
 package com.mikrolabs.DAO;
+import org.jdbi.v3.sqlobject.config.RegisterBeanMapper;
+import org.jdbi.v3.sqlobject.customizer.Bind;
+import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Optional;
-
-import com.mikrolabs.DatabaseManager;
 import com.mikrolabs.entities.User;
 
-public class UserDAO implements BaseDAO<User, String>{
+@RegisterBeanMapper(User.class)
+public interface UserDAO extends BaseDAO<User, String>{
 
-    private User mapRow(ResultSet rs) throws SQLException {
-        return new User(
-            rs.getInt("id"),
-            rs.getString("email"),
-            rs.getString("password"),
-            rs.getString("name"),
-            rs.getString("role")
-        );
-    }
+    
+
+    // private User mapRow(ResultSet rs) throws SQLException {
+    //     return new User(
+    //         rs.getInt("id"),
+    //         rs.getString("email"),
+    //         rs.getString("password"),
+    //         rs.getString("name"),
+    //         rs.getString("role")
+    //     );
+    // }
+
+    @SqlUpdate("INSERT INTO users (name, email, password, role) VALUES(:name, :email, :password, :role)")
+    Boolean registerUser(
+        @Bind("name") String name,
+        @Bind("email") String email,
+        @Bind("password") String password,
+        @Bind("role") String role
+    );
 
 
-    public int register(User user){
-        return 0;
-    }
+   
 
 
-    public Optional<User> searchUserByEmail(String email){
-        String sql = "SELECT * FROM users WHERE email = ?";
-        try (Connection conn = DatabaseManager.getDataSource().getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+
+    // public Optional<User> searchUserByEmail(String email){
+    //     String sql = "SELECT * FROM users WHERE email = ?";
+    //     try (Connection conn = DatabaseManager.getDataSource().getConnection();
+    //         PreparedStatement ps = conn.prepareStatement(sql)) {
                 
-            ps.setString(1, email);
+    //         ps.setString(1, email);
             
-            try (ResultSet rs = ps.executeQuery();) {
-                if (rs.next()) {
-                    return Optional.of(mapRow(rs));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    //         try (ResultSet rs = ps.executeQuery();) {
+    //             if (rs.next()) {
+    //                 return Optional.of(mapRow(rs));
+    //             }
+    //         }
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
 
-        return Optional.empty();
-    }
+    //     return Optional.empty();
+    // }
     
 }

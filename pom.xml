@@ -37,6 +37,16 @@
       <version>7.0.2</version>
     </dependency>
     <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-core</artifactId>
+      <version>3.49.6</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jdbi</groupId>
+      <artifactId>jdbi3-sqlobject</artifactId>
+      <version>3.49.6</version>
+    </dependency>
+    <dependency>
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>42.7.3</version>

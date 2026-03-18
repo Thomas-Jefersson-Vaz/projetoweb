@@ -1,4 +1,4 @@
-package com.mikrolabs;
+package com.mikrolabs.Servlets;
 
 import java.io.IOException;
 

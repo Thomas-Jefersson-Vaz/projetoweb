@@ -50,7 +50,7 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 48px 56px;
+  padding: 27px 56px;
   border-right: 1px solid var(--border);
   animation: fadeLeft 0.8s ease forwards;
   opacity: 0;
@@ -151,7 +151,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 56px;
+  padding: 27px 56px;
   animation: fadeRight 0.8s ease 0.15s forwards;
   opacity: 0;
   transform: translateX(20px);

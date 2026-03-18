@@ -2,6 +2,10 @@ package com.mikrolabs;
 
 import javax.sql.DataSource;
 
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
+
+import com.mikrolabs.DAO.BaseDAO;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -10,6 +14,8 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class DatabaseManager {
 
     private static final HikariDataSource dataSource;
+
+    private static final Jdbi jdbi;
 
     static {
         Dotenv dotenv = Dotenv.configure()
@@ -41,6 +47,9 @@ public class DatabaseManager {
 
 
         dataSource = new HikariDataSource(config);
+        jdbi = Jdbi.create(dataSource);
+        jdbi.installPlugin(new SqlObjectPlugin());
+        
 
     }
 
@@ -51,6 +60,10 @@ public class DatabaseManager {
 
     public static void close() {
         if (dataSource != null) dataSource.close();
+    }
+
+    public static <T extends BaseDAO<?, ?>> T getDAO(Class<T> daoClass) {
+        return jdbi.onDemand(daoClass);
     }
 
     
