@@ -2,7 +2,9 @@ package com.mikrolabs.Servlets;
 
 import java.io.IOException;
 
+import com.mikrolabs.JwtUtil;
 import com.mikrolabs.Exceptions.UsuarioJaExistenteException;
+import com.mikrolabs.controllers.CookieUtil;
 import com.mikrolabs.controllers.UserController;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -18,9 +20,18 @@ public class RegisterServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException  {
         try {
+
+            String token = CookieUtil.getJwt(req);
+
             resp.setContentType("text/html");
+
+            if (token == null || !JwtUtil.isValid(token)) {
+                req.getRequestDispatcher("/register/index.html").forward(req, resp);
+            } else{
+                resp.sendRedirect("/");
+            }
             
-            req.getRequestDispatcher("/register/index.html").forward(req, resp);
+            
 
         } catch (IOException | ServletException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

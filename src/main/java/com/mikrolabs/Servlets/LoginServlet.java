@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.mikrolabs.JwtUtil;
 import com.mikrolabs.Exceptions.SenhaIncorretaException;
 import com.mikrolabs.Exceptions.UsuarioNaoEncontrado;
+import com.mikrolabs.controllers.CookieUtil;
 import com.mikrolabs.controllers.UserController;
 import com.mikrolabs.entities.User;
 
@@ -24,18 +25,10 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException  {
         try {
 
-            Cookie[] cookies = req.getCookies();
-            String token = null;
+            String token = CookieUtil.getJwt(req);
 
-            if (cookies != null) {
-               for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("viagem_session_token")) {
-                        token = cookie.getValue();
-                        break;
-                    }
-                }         
-            }
             resp.setContentType("text/html");
+
             if (token == null || !JwtUtil.isValid(token)) {
                 req.getRequestDispatcher("/login/index.html").forward(req, resp);
             } else{
