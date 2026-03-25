@@ -2,6 +2,7 @@ package com.mikrolabs.controllers;
 
 import com.mikrolabs.Exceptions.SenhaIncorretaException;
 import com.mikrolabs.Exceptions.UsuarioNaoEncontrado;
+import com.mikrolabs.Exceptions.UsuarioJaExistenteException;
 import com.mikrolabs.entities.User;
 import com.mikrolabs.services.UserService;
 
@@ -21,4 +22,17 @@ public class UserController {
 
         return user;
     }
+
+    //Registra usuário na tela de registro
+    public Boolean registerUser(String email, String name, String password) {
+        if (userService.searchUserByEmail(email) != null) {
+            throw new UsuarioJaExistenteException("Usuário já existente");
+        }
+
+        return userService.registerUser(name, email, password);
+
+
+    }
+
+
 }

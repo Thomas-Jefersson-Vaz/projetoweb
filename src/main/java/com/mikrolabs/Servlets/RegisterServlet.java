@@ -2,11 +2,10 @@ package com.mikrolabs.Servlets;
 
 import java.io.IOException;
 
-import com.mikrolabs.Exceptions.SenhaIncorretaException;
-import com.mikrolabs.Exceptions.UsuarioNaoEncontrado;
+import com.mikrolabs.JwtUtil;
+import com.mikrolabs.Exceptions.UsuarioJaExistenteException;
+import com.mikrolabs.controllers.CookieUtil;
 import com.mikrolabs.controllers.UserController;
-import com.mikrolabs.entities.User;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -21,9 +20,18 @@ public class RegisterServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException  {
         try {
+
+            String token = CookieUtil.getJwt(req);
+
             resp.setContentType("text/html");
+
+            if (token == null || !JwtUtil.isValid(token)) {
+                req.getRequestDispatcher("/register/index.html").forward(req, resp);
+            } else{
+                resp.sendRedirect("/");
+            }
             
-            req.getRequestDispatcher("/register/index.html").forward(req, resp);
+            
 
         } catch (IOException | ServletException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -35,6 +43,39 @@ public class RegisterServlet extends HttpServlet{
 
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String email  = req.getParameter("email");
+        String name = req.getParameter("name");
+        String password = req.getParameter("password");
+        if (email == null || email.isBlank() || password == null || password.isBlank() || name == null|| name.isBlank()) {
+            throw new IllegalArgumentException("Email e senha são obrigatórios.");
+        } else {
+            try {
+                Boolean userCreated = userController.registerUser(email, name, password);
+                    if (userCreated) {
+                        resp.setStatus(HttpServletResponse.SC_CREATED);
+                        resp.setContentType("application/json");
+                        resp.getWriter().println("{\"status\": true}");
+                    } else {
+                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        resp.setContentType("application/json");
+                        resp.getWriter().println("{\"status\": false, \"mensagem\": \"Ocorreu um erro no servidor.\", \"error\":\"Error\"}");
+                    }
+            } catch (UsuarioJaExistenteException e) {
+                    resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                    resp.setContentType("application/json");
+                    resp.getWriter().println("{\"status\": Erro, \"mensagem\": \"Usuário já existe.\"}");
+            } catch (IOException e) {
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                resp.setContentType("application/json");
+                resp.getWriter().println("{\"status\": false, \"mensagem\": \"Ocorreu um erro no servidor.\", \"error\": \"" + e.getMessage() + "\"}");
+                e.printStackTrace();
+            } 
+            
+        } 
+
+
+
+
     //     try {
     //         String email  = req.getParameter("email");
     //         String password = req.getParameter("password");

@@ -7,6 +7,11 @@ public class User {
     private String name;
     private String role;
 
+
+    public User(){
+        
+    }
+
     public User(User user) {
         this.id = user.getId();
         this.email = user.getEmail();

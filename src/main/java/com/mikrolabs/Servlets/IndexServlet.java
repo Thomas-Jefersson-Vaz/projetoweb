@@ -1,6 +1,9 @@
-package com.mikrolabs;
+package com.mikrolabs.Servlets;
 
 import java.io.IOException;
+
+import com.mikrolabs.JwtUtil;
+import com.mikrolabs.controllers.CookieUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,9 +16,10 @@ public class IndexServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException  {
         try {
+            String token = CookieUtil.getJwt(req);
 
-            if (getServletContext().getResource("/home/index.html") == null) {
-                resp.sendRedirect("login"); /* Futura validação de sessão, por enquanto valida somente se o index.html existe */
+            if (token == null || !JwtUtil.isValid(token)) {
+                resp.sendRedirect(req.getContextPath() + "login");
             } else {
                 resp.setContentType("text/html");
                 req.getRequestDispatcher("/home/index.html").forward(req, resp);
