@@ -87,10 +87,11 @@ form.addEventListener('submit', async (e) => {
   btnLogin.disabled = false;
 
   // Exemplo: login bem-sucedido
-  // window.location.href = '/dashboard';
+  // 
 
   if (res.status === 200) {
     showToast('Login bem-sucedido!');
+    setTimeout(() => window.location.href = '/', 1500);
   } else if (res.status === 401) {
     showToast('Email ou senha incorretos. Tente novamente.');
   } else if (res.status === 404) {
