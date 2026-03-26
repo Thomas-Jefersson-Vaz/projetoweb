@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public class CookieUtil {
       public static String getJwt(HttpServletRequest req) {
+        //Função para pegar a requisição, isola o token e o retorna
           Cookie[] cookies = req.getCookies();
           if (cookies == null) return null;
   

@@ -71,8 +71,6 @@ public class LoginServlet extends HttpServlet {
 
                         resp.setContentType("application/json");
                         resp.getWriter().println("{\"status\": \"logado com sucesso\"}");
-                        
-                        // Futura implementação de sessão, por enquanto redireciona para o index.html
                     }
                 } catch (UsuarioNaoEncontrado e) {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
