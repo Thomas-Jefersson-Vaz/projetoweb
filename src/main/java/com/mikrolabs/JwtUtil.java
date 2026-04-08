@@ -2,17 +2,18 @@ package com.mikrolabs;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+
 import javax.crypto.SecretKey;
 import java.util.Date;
 
 public class JwtUtil {
-  private static final String SECRET = "UIstzOjEbDvGZpQgpVicHFITexjyDwca";
-  private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
-  private static final long EXPIRATION_MS = 1000 * 60 * 60;
+    private static final String SECRET = "UIstzOjEbDvGZpQgpVicHFITexjyDwca";
+    private static final SecretKey KEY = Keys.hmacShaKeyFor(SECRET.getBytes());
+    private static final long EXPIRATION_MS = 1000 * 60 * 60;
 
-  public static String generateToken(String username) {
+    public static String generateToken(String email) {
         return Jwts.builder()
-                .subject(username)
+                .subject(email)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(KEY)
@@ -38,5 +39,4 @@ public class JwtUtil {
             return false;
         }
     }
-
 }
