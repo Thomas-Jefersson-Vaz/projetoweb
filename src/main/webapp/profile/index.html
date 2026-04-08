@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mikrolabs Viagem 123 — Perfil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/profile/profile.css" />
+</head>
+<body>
+  <div class="bg-map"></div>
+  <div class="bg-overlay"></div>
+
+  <div class="page">
+    <header class="topbar">
+      <a href="/" class="brand">
+        <span class="brand-icon">✈</span>
+        <div>
+          <div class="brand-name">Mikrolabs</div>
+          <div class="brand-sub">Viagem 123</div>
+        </div>
+      </a>
+      <div class="topbar-right">
+        <button class="topbar-notif">🔔<span class="notif-dot"></span></button>
+        <div class="topbar-avatar">JD</div>
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Abrir menu">☰</button>
+      </div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <p class="sidebar-label">Menu</p>
+        <a href="#" class="nav-item">🏠 Início</a>
+        <a href="#" class="nav-item">✈ Minhas Viagens</a>
+        <a href="#" class="nav-item">🔖 Favoritos</a>
+        <a href="#" class="nav-item">💳 Pagamentos</a>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-section">
+        <p class="sidebar-label">Conta</p>
+        <a href="#" class="nav-item active">👤 Perfil</a>
+        <a href="#" class="nav-item">🔒 Segurança</a>
+        <a href="#" class="nav-item">🔔 Notificações</a>
+      </div>
+      <div class="sidebar-bottom">
+        <a href="/logout" class="nav-item danger">🚪 Sair</a>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="page-header-mini">
+        <h1>Meu <em>Perfil</em></h1>
+        <div class="tabs-mini">
+          <button class="tab-btn active" data-tab="dados">Dados Pessoais</button>
+          <button class="tab-btn" data-tab="viagens">Viagens</button>
+          <button class="tab-btn" data-tab="pagamento">Pagamento</button>
+          <button class="tab-btn" data-tab="seguranca">Segurança</button>
+        </div>
+      </div>
+
+      <div class="tab-panel active" id="tab-dados">
+        <div class="profile-hero-mini card">
+          <div class="avatar-group">
+            <div class="avatar-ring-mini" id="heroInitials">--</div>
+            <button class="btn-avatar-mini">Alterar</button>
+          </div>
+          <div class="profile-info-mini">
+            <h2 id="heroName">Carregando...</h2>
+            <p id="heroEmail">carregando@email.com</p>
+            <div class="badges-mini">
+              <span class="badge">✈ Viajante</span>
+              <span class="badge">⭐ Gold</span>
+              <span class="badge">📍 Brasil</span>
+            </div>
+          </div>
+          <div class="profile-stats-mini">
+            <div class="stat"><strong>12</strong><span>Viagens</span></div>
+            <div class="stat"><strong>8</strong><span>Países</span></div>
+            <div class="stat"><strong>4.9</strong><span>Nota</span></div>
+          </div>
+        </div>
+
+        <div class="grid-compact">
+          <div class="card">
+            <h3 class="card-title-mini">👤 Informações Pessoais</h3>
+            <div class="field"><label>Nome</label><input type="text" id="inputName" placeholder="Carregando..."></div>
+            <div class="field-row">
+              <div class="field"><label>Nascimento</label><input type="text" id="inputBirthdate" placeholder="DD/MM/AAAA"></div>
+              <div class="field"><label>Nacionalidade</label>
+                <select id="inputNationality">
+                  <option value="Brasileiro">🇧🇷 Brasileiro</option>
+                  <option value="Afegão">🇦🇫 Afegão</option>
+                  <option value="Alemão">🇩🇪 Alemão</option>
+                  <option value="Angolano">🇦🇴 Angolano</option>
+                  <option value="Argentino">🇦🇷 Argentino</option>
+                  <option value="Australiano">🇦🇺 Australiano</option>
+                  <option value="Austríaco">🇦🇹 Austríaco</option>
+                  <option value="Belga">🇧🇪 Belga</option>
+                  <option value="Boliviano">🇧🇴 Boliviano</option>
+                  <option value="Britânico">🇬🇧 Britânico</option>
+                  <option value="Camaronês">🇨🇲 Camaronês</option>
+                  <option value="Canadense">🇨🇦 Canadense</option>
+                  <option value="Chileno">🇨🇱 Chileno</option>
+                  <option value="Chinês">🇨🇳 Chinês</option>
+                  <option value="Colombiano">🇨🇴 Colombiano</option>
+                  <option value="Congolês">🇨🇩 Congolês</option>
+                  <option value="Coreano">🇰🇷 Coreano</option>
+                  <option value="Costa-riquenho">🇨🇷 Costa-riquenho</option>
+                  <option value="Croata">🇭🇷 Croata</option>
+                  <option value="Cubano">🇨🇺 Cubano</option>
+                  <option value="Dinamarquês">🇩🇰 Dinamarquês</option>
+                  <option value="Egípcio">🇪🇬 Egípcio</option>
+                  <option value="Espanhol">🇪🇸 Espanhol</option>
+                  <option value="Estadunidense">🇺🇸 Estadunidense</option>
+                  <option value="Filipino">🇵🇭 Filipino</option>
+                  <option value="Finlandês">🇫🇮 Finlandês</option>
+                  <option value="Francês">🇫🇷 Francês</option>
+                  <option value="Grego">🇬🇷 Grego</option>
+                  <option value="Haitiano">🇭🇹 Haitiano</option>
+                  <option value="Holandês">🇳🇱 Holandês</option>
+                  <option value="Indiano">🇮🇳 Indiano</option>
+                  <option value="Irlandês">🇮🇪 Irlandês</option>
+                  <option value="Israelense">🇮🇱 Israelense</option>
+                  <option value="Italiano">🇮🇹 Italiano</option>
+                  <option value="Japonês">🇯🇵 Japonês</option>
+                  <option value="Marroquino">🇲🇦 Marroquino</option>
+                  <option value="Mexicano">🇲🇽 Mexicano</option>
+                  <option value="Moçambicano">🇲🇿 Moçambicano</option>
+                  <option value="Nigeriano">🇳🇬 Nigeriano</option>
+                  <option value="Norueguês">🇳🇴 Norueguês</option>
+                  <option value="Panamenho">🇵🇦 Panamenho</option>
+                  <option value="Paraguaio">🇵🇾 Paraguaio</option>
+                  <option value="Peruano">🇵🇪 Peruano</option>
+                  <option value="Polonês">🇵🇱 Polonês</option>
+                  <option value="Português">🇵🇹 Português</option>
+                  <option value="Russo">🇷🇺 Russo</option>
+                  <option value="Senegalês">🇸🇳 Senegalês</option>
+                  <option value="Sueco">🇸🇪 Sueco</option>
+                  <option value="Suíço">🇨🇭 Suíço</option>
+                  <option value="Sírio">🇸🇾 Sírio</option>
+                  <option value="Turco">🇹🇷 Turco</option>
+                  <option value="Ucraniano">🇺🇦 Ucraniano</option>
+                  <option value="Uruguaio">🇺🇾 Uruguaio</option>
+                  <option value="Venezuelano">🇻🇪 Venezuelano</option>
+                  <option value="Zimbabuano">🇿🇼 Zimbabuano</option>
+                  <option value="Outro">🌍 Outro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="card-title-mini">📬 Contato & Bio</h3>
+            <div class="field-row">
+              <div class="field"><label>Telefone</label><input type="tel" id="inputPhone" placeholder="(00) 00000-0000"></div>
+              <div class="field"><label>Cidade</label><input type="text" id="inputCity" placeholder="Sua Cidade"></div>
+            </div>
+            <div class="field"><label>Bio</label><textarea id="inputBio" placeholder="Conte algo sobre você..."></textarea></div>
+          </div>
+
+          <div class="card card-full-mini">
+            <h3 class="card-title-mini">✈ Preferências</h3>
+            <div class="field-grid-4">
+              <div class="field"><label>Assento</label>
+                <select id="inputAssento">
+                  <option value="Janela">Janela</option>
+                  <option value="Corredor">Corredor</option>
+                  <option value="Meio">Meio</option>
+                </select>
+              </div>
+              <div class="field"><label>Comida</label>
+                <select id="inputComida">
+                  <option value="Padrão">Padrão</option>
+                  <option value="Vegetariana">Vegetariana</option>
+                  <option value="Vegana">Vegana</option>
+                  <option value="Sem Glúten">Sem Glúten</option>
+                  <option value="Infantil">Infantil</option>
+                </select>
+              </div>
+              <div class="field"><label>Classe</label>
+                <select id="inputClasse">
+                  <option value="Econômica">Econômica</option>
+                  <option value="Premium">Premium</option>
+                  <option value="Executiva">Executiva</option>
+                  <option value="Primeira Classe">Primeira Classe</option>
+                </select>
+              </div>
+              <div class="field"><label>Moeda</label>
+                <select id="inputMoeda">
+                  <option value="BRL">BRL (R$)</option>
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                </select>
+              </div>
+              <div class="btn-container">
+                <button class="btn-primary-mini" id="btnSave">Salvar Alterações</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="assets/profile/profile.js"></script>
+</body>
+</html>
