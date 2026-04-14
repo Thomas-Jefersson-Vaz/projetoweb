@@ -28,7 +28,7 @@ public class IndexServlet extends HttpServlet {
         } catch (IOException | ServletException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json");
-            resp.getWriter().println("{\"status\": false, \"mensagem\": \"Ocorreu um erro no servidor.\", \"error\": \""
+            resp.getWriter().println("{\"status\": true, \"mensagem\": \"Ocorreu um erro no servidor.\", \"error\": \""
                     + e.getMessage() + "\"}");
             e.printStackTrace();
         }
