@@ -9,125 +9,125 @@ const countEl     = () => document.getElementById('resultsCount');
 const titleEl     = () => document.getElementById('resultsTitle');
 
 async function getLocations() {
-  try {
-    const res = await fetch('/api/locations');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (err) {
-    console.error('Erro ao buscar destinos:', err);
-    return [];
-  }
+    try {
+        const res = await fetch('/api/locations');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (err) {
+        console.error('Erro ao buscar destinos:', err);
+        return [];
+    }
 }
 
 async function search() {
-  const name      = document.getElementById('search-name').value;
-  const startDate = document.getElementById('search-start-date').value;
-  const endDate   = document.getElementById('search-end-date').value;
+    const name      = document.getElementById('search-name').value;
+    const startDate = document.getElementById('search-start-date').value;
+    const endDate   = document.getElementById('search-end-date').value;
 
-  const btn = document.getElementById('btnSearch');
-  btn.classList.add('loading');
+    const btn = document.getElementById('btnSearch');
+    btn.classList.add('loading');
 
-  showLoading(true);
+    showLoading(true);
 
-  try {
-    const url = new URL('/api/search', window.location.origin);
-    url.searchParams.append('name', name);
-    url.searchParams.append('startDate', startDate);
-    url.searchParams.append('endDate', endDate);
+    try {
+        const url = new URL('/search', window.location.origin);
+        url.searchParams.append('name', name);
+        url.searchParams.append('startDate', startDate);
+        url.searchParams.append('endDate', endDate);
 
-    const res = await fetch(url.toString(), { method: 'POST' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const res = await fetch(url.toString(), { method: 'POST' });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-    allLocations = await res.json();
-    currentFilter = 'all';
+        allLocations = await res.json();
+        currentFilter = 'all';
 
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    document.querySelector('.chip[data-continent="all"]').classList.add('active');
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        document.querySelector('.chip[data-continent="all"]').classList.add('active');
 
-    titleEl().textContent = name
-      ? `Resultados para "${name}"`
-      : 'Todos os Destinos';
+        titleEl().textContent = name
+            ? `Resultados para "${name}"`
+            : 'Todos os Destinos';
 
-    applyFilterAndSort();
-  } catch (err) {
-    console.error(err);
-    allLocations = [];
-    applyFilterAndSort();
-  } finally {
-    btn.classList.remove('loading');
-  }
+        applyFilterAndSort();
+    } catch (err) {
+        console.error(err);
+        allLocations = [];
+        applyFilterAndSort();
+    } finally {
+        btn.classList.remove('loading');
+    }
 }
 
 async function bookDestination(id) {
-  try {
-    const res = await fetch(`/api/destination/book/${id}`, { method: 'POST' });
-    if (!res.ok) throw new Error(`Erro ao reservar destino ${id}`);
-    const json = await res.json();
-    console.log('Reserva:', json);
-    showToast('Destino reservado com sucesso! ✈️');
-  } catch (err) {
-    console.error(err);
-    showToast('Erro ao reservar destino. Tente novamente.');
-  }
+    try {
+        const res = await fetch(`/api/destination/book/${id}`, { method: 'POST' });
+        if (!res.ok) throw new Error(`Erro ao reservar destino ${id}`);
+        const json = await res.json();
+        console.log('Reserva:', json);
+        showToast('Destino reservado com sucesso! ✈️');
+    } catch (err) {
+        console.error(err);
+        showToast('Erro ao reservar destino. Tente novamente.');
+    }
 }
 
 function applyFilterAndSort() {
-  let filtered = [...allLocations];
+    let filtered = [...allLocations];
 
-  if (currentFilter !== 'all') {
-    filtered = filtered.filter(l =>
-      l.continent && l.continent.toLowerCase() === currentFilter.toLowerCase()
-    );
-  }
+    if (currentFilter !== 'all') {
+        filtered = filtered.filter(l =>
+            l.continent && l.continent.toLowerCase() === currentFilter.toLowerCase()
+        );
+    }
 
-  switch (currentSort) {
-    case 'name':
-      filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-      break;
-    case 'name-desc':
-      filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
-      break;
-    case 'price':
-      filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
-      break;
-    case 'price-desc':
-      filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
-      break;
-  }
+    switch (currentSort) {
+        case 'name':
+            filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            break;
+        case 'name-desc':
+            filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
+            break;
+        case 'price':
+            filtered.sort((a, b) => (a.price || 0) - (b.price || 0));
+            break;
+        case 'price-desc':
+            filtered.sort((a, b) => (b.price || 0) - (a.price || 0));
+            break;
+    }
 
-  renderDestinations(filtered);
+    renderDestinations(filtered);
 }
 
 function showLoading(show) {
-  loadingEl().style.display = show ? 'grid' : 'none';
-  grid().style.display      = show ? 'none' : 'grid';
-  emptyEl().style.display   = 'none';
+    loadingEl().style.display = show ? 'grid' : 'none';
+    grid().style.display      = show ? 'none' : 'grid';
+    emptyEl().style.display   = 'none';
 }
 
 function renderDestinations(locations) {
-  showLoading(false);
-  const container = grid();
-  container.innerHTML = '';
+    showLoading(false);
+    const container = grid();
+    container.innerHTML = '';
 
-  if (locations.length === 0) {
-    emptyEl().style.display  = 'flex';
-    container.style.display  = 'none';
-    countEl().textContent    = '';
-    return;
-  }
+    if (locations.length === 0) {
+        emptyEl().style.display  = 'flex';
+        container.style.display  = 'none';
+        countEl().textContent    = '';
+        return;
+    }
 
-  emptyEl().style.display = 'none';
-  container.style.display = 'grid';
+    emptyEl().style.display = 'none';
+    container.style.display = 'grid';
 
-  const suffix = locations.length === 1 ? 'destino encontrado' : 'destinos encontrados';
-  countEl().textContent = `${locations.length} ${suffix}`;
+    const suffix = locations.length === 1 ? 'destino encontrado' : 'destinos encontrados';
+    countEl().textContent = `${locations.length} ${suffix}`;
 
-  locations.forEach((loc, i) => {
-    const card = document.createElement('div');
-    card.className = 'dest-card';
-    card.style.animationDelay = `${i * 0.08}s`;
+    locations.forEach((loc, i) => {
+        const card = document.createElement('div');
+        card.className = 'dest-card';
+        card.style.animationDelay = `${i * 0.08}s`;
 
-    card.innerHTML = `
+        card.innerHTML = `
       <div class="dest-img-wrap">
         <img src="${loc.imageUrl || ''}" alt="${loc.name || 'Destino'}" class="dest-img"
              onerror="this.style.background='linear-gradient(135deg,#132236,#1a3050)'; this.style.objectFit='none';">
@@ -143,26 +143,26 @@ function renderDestinations(locations) {
       </div>
     `;
 
-    container.appendChild(card);
-  });
+        container.appendChild(card);
+    });
 }
 
 function formatPrice(value) {
-  if (!value && value !== 0) return '—';
-  return new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-    minimumFractionDigits: 0,
-  }).format(value);
+    if (!value && value !== 0) return '—';
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 0,
+    }).format(value);
 }
 
 function showToast(message) {
-  let toast = document.getElementById('toast');
-  if (!toast) {
-    toast = document.createElement('div');
-    toast.id = 'toast';
-    toast.className = 'toast';
-    toast.style.cssText = `
+    let toast = document.getElementById('toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.className = 'toast';
+        toast.style.cssText = `
       position:fixed; bottom:28px; left:50%;
       transform:translateX(-50%) translateY(20px);
       background:#1e3a52; border:1px solid var(--gold);
@@ -171,77 +171,78 @@ function showToast(message) {
       opacity:0; transition:opacity .3s, transform .3s;
       z-index:999; white-space:nowrap;
     `;
-    document.body.appendChild(toast);
-  }
-  toast.textContent = message;
-  toast.classList.add('show');
-  toast.style.opacity = '1';
-  toast.style.transform = 'translateX(-50%) translateY(0)';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
 
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transform = 'translateX(-50%) translateY(20px)';
-    toast.classList.remove('show');
-  }, 3000);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        toast.classList.remove('show');
+    }, 3000);
 }
 
 function setupFilters() {
-  document.querySelectorAll('.chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      chip.classList.add('active');
-      currentFilter = chip.dataset.continent;
-      applyFilterAndSort();
+    document.querySelectorAll('.chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
+            currentFilter = chip.dataset.continent;
+            applyFilterAndSort();
+        });
     });
-  });
 
-  const sortSelect = document.getElementById('sort-select');
-  if (sortSelect) {
-    sortSelect.addEventListener('change', () => {
-      currentSort = sortSelect.value;
-      applyFilterAndSort();
-    });
-  }
+    const sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', () => {
+            currentSort = sortSelect.value;
+            applyFilterAndSort();
+        });
+    }
 }
 
 function setupSearchEnter() {
-  const inputs = document.querySelectorAll('.search-field input');
-  inputs.forEach(input => {
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        search();
-      }
+    const inputs = document.querySelectorAll('.search-field input');
+    inputs.forEach(input => {
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                search();
+            }
+        });
     });
-  });
 }
 
 function parseUrlParams() {
-  const params = new URLSearchParams(window.location.search);
-  const name      = params.get('name');
-  const startDate = params.get('startDate');
-  const endDate   = params.get('endDate');
+    const params = new URLSearchParams(window.location.search);
+    const name      = params.get('name');
+    const startDate = params.get('startDate');
+    const endDate   = params.get('endDate');
 
-  if (name)      document.getElementById('search-name').value = name;
-  if (startDate) document.getElementById('search-start-date').value = startDate;
-  if (endDate)   document.getElementById('search-end-date').value = endDate;
+    if (name)      document.getElementById('search-name').value = name;
+    if (startDate) document.getElementById('search-start-date').value = startDate;
+    if (endDate)   document.getElementById('search-end-date').value = endDate;
 
-  return !!(name || startDate || endDate);
+    return !!(name || startDate || endDate);
 }
 
 async function init() {
-  setupFilters();
-  setupSearchEnter();
+    setupFilters();
+    setupSearchEnter();
 
-  const hasParams = parseUrlParams();
+    const hasParams = parseUrlParams();
 
-  if (hasParams) {
-    await search();
-  } else {
-    allLocations = await getLocations();
-    showLoading(false);
-    applyFilterAndSort();
-  }
+    if (hasParams) {
+        await search();
+    } else {
+        allLocations = await getLocations();
+        showLoading(false);
+        applyFilterAndSort();
+    }
 }
 
+document.getElementById('btnSearch').addEventListener('click', search);
 document.addEventListener('DOMContentLoaded', init);
