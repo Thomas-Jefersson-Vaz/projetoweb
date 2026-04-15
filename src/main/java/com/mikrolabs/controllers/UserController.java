@@ -1,6 +1,7 @@
 package com.mikrolabs.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.mikrolabs.Exceptions.SenhaIncorretaException;
@@ -56,6 +57,13 @@ public class UserController {
 
     public Boolean patchUser(String subject, User userNew) throws IOException {
         return userService.patchUser(subject, userNew);
+    }
+
+    public List<User> buscarTodosUsuarios() {
+        List<User> usersList = userService.buscarTodosUsuarios();
+        usersList.forEach(user -> user.setPassword(null));
+
+        return usersList;
     }
 
 }

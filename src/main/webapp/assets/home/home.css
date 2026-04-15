@@ -99,6 +99,23 @@ html, body {
     color: var(--gold-lt);
 }
 
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.btn-admin {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.08);
+}
+
+.btn-admin:hover {
+    background: var(--gold);
+    color: var(--navy);
+}
+
 /* ── HERO SECTION ── */
 .hero-section {
     text-align: center;

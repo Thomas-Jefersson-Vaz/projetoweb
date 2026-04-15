@@ -1,5 +1,7 @@
 package com.mikrolabs.services;
 
+import java.util.List;
+
 import com.mikrolabs.DatabaseManager;
 import com.mikrolabs.DAO.UserDAO;
 import com.mikrolabs.entities.User;
@@ -25,6 +27,10 @@ public class UserService {
         return userDAO.PatchUser(userNew.getAssento(), userNew.getBio(), userNew.getCidade(), userNew.getClasse(),
                 userNew.getComida(), userNew.getDataNascimento(), userNew.getMoeda(), userNew.getNacionalidade(),
                 userNew.getName(), userNew.getNumTelefone(), subject);
+    }
+
+    public List<User> buscarTodosUsuarios() {
+        return userDAO.findAll("users");
     }
 
 }
