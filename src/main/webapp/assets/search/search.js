@@ -38,8 +38,16 @@ async function search() {
         const res = await fetch(url.toString(), { method: 'POST' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-        allLocations = await res.json();
-        currentFilter = 'all';
+        const result = await res.json()
+
+        if (result.status) {
+            allLocations = result.dados; // AQUI: pega apenas a lista de destinos
+        } else {
+            console.error('Erro do servidor:', result.mensagem);
+            allLocations = [];
+        }
+
+        console.log('Destinos carregados:', allLocations);
 
         document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
         document.querySelector('.chip[data-continent="all"]').classList.add('active');

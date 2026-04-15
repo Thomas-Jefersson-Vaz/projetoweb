@@ -17,27 +17,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet("/z")
-public class LocationManagerServlet extends HttpServlet {
+public class LocationManagerServlet extends BaseServlet<LocationService> {
 
-    private final LocationService locationService = new LocationService();
     private final Gson gson = GsonUtil.create();
 
-    // Verification method to check if user is admin (Assuming for now valid token = can access, but could check role)
-    private boolean isAuthenticated(HttpServletRequest req) {
-        String token = CookieUtil.getJwt(req);
-        return token != null && JwtUtil.isValid(token);
+    protected LocationManagerServlet() {
+        super(new LocationService());
     }
 
-    /**
-     * GET /admin-locations 
-     * Either serves HTML (if Accept: text/html) or returns JSON of ALL locations (if Accept: application/json)
-     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         if (!isAuthenticated(req)) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            if ("application/json".equals(req.getHeader("Accept"))) {
-                resp.getWriter().println("{\"error\": \"Unauthorized\"}");
+            // Se for AJAX/JSON, manda erro 401, se não, redireciona
+            String accept = req.getHeader("Accept");
+            if (accept != null && accept.contains("application/json")) {
+                enviarErro(resp, HttpServletResponse.SC_UNAUTHORIZED, "Não autorizado");
             } else {
                 resp.sendRedirect(req.getContextPath() + "/login");
             }
@@ -46,90 +40,68 @@ public class LocationManagerServlet extends HttpServlet {
 
         String accept = req.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
-            // Serve JSON list
             try {
-                List<Location> locations = locationService.findAll();
-                resp.setStatus(HttpServletResponse.SC_OK);
-                resp.setContentType("application/json");
-                resp.setCharacterEncoding("UTF-8");
-                resp.getWriter().println(gson.toJson(locations));
+                // USAMOS 'service' que herdamos da BaseServlet
+                List<Location> locations = service.findAll();
+                enviarSucesso(resp, "Lista carregada", locations);
             } catch (Exception e) {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                resp.setContentType("application/json");
-                resp.getWriter().println("{\"error\": \"" + e.getMessage() + "\"}");
+                enviarErro(resp, 500, e.getMessage());
             }
         } else {
-            // Serve the HTML page
             resp.setContentType("text/html");
             req.getRequestDispatcher("/admin-locations/index.html").forward(req, resp);
         }
     }
 
-    /**
-     * POST /admin-locations
-     * Creates a new destination
-     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!isAuthenticated(req)) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            enviarErro(resp, HttpServletResponse.SC_UNAUTHORIZED, "Não autorizado");
             return;
         }
 
         try {
+            // Usamos o gson que já está na BaseServlet
             Location newLoc = gson.fromJson(req.getReader(), Location.class);
 
-            if (newLoc.getName() == null || newLoc.getCountry() == null || newLoc.getPrice() == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.getWriter().println("{\"error\": \"Missing required fields\"}");
+            if (newLoc.getName() == null || newLoc.getCountry() == null) {
+                enviarErro(resp, HttpServletResponse.SC_BAD_REQUEST, "Campos obrigatórios ausentes");
                 return;
             }
 
-            boolean success = locationService.insert(newLoc);
+            boolean success = service.insert(newLoc);
             if (success) {
-                resp.setStatus(HttpServletResponse.SC_CREATED);
-                resp.setContentType("application/json");
-                resp.getWriter().println("{\"status\": true}");
+                enviarSucesso(resp, "Local criado com sucesso!", null);
             } else {
-                throw new Exception("Falha ao salvar no banco.");
+                enviarErro(resp, 400, "Não foi possível salvar o local.");
             }
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.setContentType("application/json");
-            resp.getWriter().println("{\"status\": false, \"error\": \"" + e.getMessage() + "\"}");
-            e.printStackTrace();
+            enviarErro(resp, 500, "Erro interno: " + e.getMessage());
         }
     }
 
-    /**
-     * DELETE /admin-locations?id={id}
-     * Deletes a destination
-     */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!isAuthenticated(req)) {
-            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            enviarErro(resp, 401, "Não autorizado");
             return;
         }
 
         try {
             String idStr = req.getParameter("id");
             if (idStr == null) {
-                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                enviarErro(resp, 400, "ID ausente");
                 return;
             }
 
-            int id = Integer.parseInt(idStr);
-            boolean success = locationService.deleteById(id);
-
+            boolean success = service.deleteById(Integer.parseInt(idStr));
             if (success) {
-                resp.setStatus(HttpServletResponse.SC_OK);
+                enviarSucesso(resp, "Deletado com sucesso", null);
             } else {
-                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                enviarErro(resp, 404, "Local não encontrado");
             }
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            e.printStackTrace();
+            enviarErro(resp, 500, "Erro ao deletar: " + e.getMessage());
         }
     }
 }

@@ -1,9 +1,12 @@
 package com.mikrolabs.Servlets;
 
 import com.google.gson.Gson;
+import com.mikrolabs.JwtUtil;
+import com.mikrolabs.controllers.CookieUtil;
 import com.mikrolabs.controllers.GsonUtil;
 import com.mikrolabs.response.ApiResponse;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -26,6 +29,10 @@ public abstract class BaseServlet<S> extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         resp.getWriter().print(this.gson.toJson(objeto));
         resp.getWriter().flush();
+    }
+    protected boolean isAuthenticated(HttpServletRequest req) {
+        String token = CookieUtil.getJwt(req);
+        return token != null && JwtUtil.isValid(token);
     }
 
     // Atalho para enviar Sucesso padronizado
