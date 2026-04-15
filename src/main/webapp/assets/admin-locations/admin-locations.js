@@ -1,0 +1,153 @@
+document.addEventListener('DOMContentLoaded', () => {
+    loadLocations();
+    document.getElementById('destinationForm').addEventListener('submit', handleAddDestination);
+});
+
+async function loadLocations() {
+    const listEl = document.getElementById('locationsList');
+    const loadEl = document.getElementById('loadingState');
+
+    listEl.innerHTML = '';
+    loadEl.style.display = 'block';
+
+    try {
+        const res = await fetch('/admin-locations', {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' } // Signal we want json not the HTML page in return
+        });
+
+        if (!res.ok) {
+            // Probably unauthenticated
+            if(res.status === 401 || res.status === 403) {
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error('Falha ao carregar');
+        }
+
+        const data = await res.json();
+        
+        loadEl.style.display = 'none';
+
+        if (data.length === 0) {
+            listEl.innerHTML = '<p style="color:var(--muted); text-align:center; padding: 2rem 0;">Nenhum destino cadastrado ainda.</p>';
+            return;
+        }
+
+        data.forEach(loc => {
+            const row = document.createElement('div');
+            row.className = 'loc-item';
+            row.innerHTML = `
+                <div class="loc-img-box">
+                    <img src="${loc.imageUrl}" alt="${loc.name}" onerror="this.style.display='none'">
+                </div>
+                <div class="loc-details">
+                    <h3>${loc.name}, ${loc.country}</h3>
+                    <p>${loc.continent} — ${loc.description?.substring(0,60)}...</p>
+                </div>
+                <div class="loc-actions">
+                    <span class="loc-price">${new Intl.NumberFormat('pt-BR', {style:'currency', currency:'BRL'}).format(loc.price)}</span>
+                    <button class="btn-delete" onclick="deleteLocation(${loc.id})">Excluir</button>
+                </div>
+            `;
+            listEl.appendChild(row);
+        });
+
+    } catch (e) {
+        console.error(e);
+        loadEl.style.display = 'none';
+        listEl.innerHTML = '<p style="color:var(--error); text-align:center;">Erro ao carregar destinos.</p>';
+    }
+}
+
+async function handleAddDestination(e) {
+    e.preventDefault();
+
+    const btn = document.getElementById('btnSubmitDest');
+    btn.classList.add('loading');
+
+    const payload = {
+        name: document.getElementById('dest-name').value,
+        country: document.getElementById('dest-country').value,
+        continent: document.getElementById('dest-continent').value,
+        price: parseFloat(document.getElementById('dest-price').value),
+        imageUrl: document.getElementById('dest-imageUrl').value,
+        description: document.getElementById('dest-desc').value,
+        startDate: document.getElementById('dest-start').value || null,
+        endDate: document.getElementById('dest-end').value || null
+    };
+
+    try {
+        const res = await fetch('/admin-locations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!res.ok) {
+            throw new Error(`Erro: ${res.status}`);
+        }
+
+        showToast('Destino cadastrado com sucesso!');
+        document.getElementById('destinationForm').reset();
+        
+        // Reload list
+        loadLocations();
+    } catch (e) {
+        console.error(e);
+        showToast('Falha ao cadastrar o destino. Tente novamente.');
+    } finally {
+        btn.classList.remove('loading');
+    }
+}
+
+async function deleteLocation(id) {
+    if (!confirm('Deseja realmente remover este destino da plataforma?')) return;
+
+    try {
+        const res = await fetch(`/admin-locations?id=${id}`, {
+            method: 'DELETE'
+        });
+
+        if (!res.ok) {
+            throw new Error(`Erro: ${res.status}`);
+        }
+        
+        showToast('Destino excluído.');
+        loadLocations();
+    } catch (e) {
+        console.error(e);
+        showToast('Erro ao excluir destino.');
+    }
+}
+
+function showToast(message) {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'toast';
+      toast.className = 'toast';
+      toast.style.cssText = `
+        position:fixed; bottom:28px; left:50%;
+        transform:translateX(-50%) translateY(20px);
+        background:#1e3a52; border:1px solid var(--gold);
+        border-radius:10px; padding:12px 24px;
+        font-size:0.88rem; color:#f5f0e8;
+        opacity:0; transition:opacity .3s, transform .3s;
+        z-index:999; white-space:nowrap;
+      `;
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+  
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+      toast.classList.remove('show');
+    }, 3000);
+}
