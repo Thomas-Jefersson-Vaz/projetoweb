@@ -77,9 +77,24 @@ function renderDestinations(locations) {
         container.insertAdjacentHTML("beforeend", div);
     })
 }
+async function checkAdmin() {
+    try {
+        const response = await fetch("/profile/user");
+        if (!response.ok) return;
+        const user = await response.json();
+        if (user.role === "admin") {
+            const btn = document.getElementById("btn-admin");
+            if (btn) btn.style.display = "";
+        }
+    } catch (e) {
+        // silently ignore – non-admin or not logged in
+    }
+}
+
 async function init(){
     const locations = await getLocations();
     renderDestinations(locations);
+    checkAdmin();
 }
 
 /**
