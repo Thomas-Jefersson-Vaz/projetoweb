@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet("")
 public class IndexServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException  {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         try {
             String token = CookieUtil.getJwt(req);
 
@@ -24,13 +24,13 @@ public class IndexServlet extends HttpServlet {
                 resp.setContentType("text/html");
                 req.getRequestDispatcher("/home/index.html").forward(req, resp);
             }
-            
 
         } catch (IOException | ServletException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json");
-            resp.getWriter().println("{\"status\": false, \"mensagem\": \"Ocorreu um erro no servidor.\", \"error\": \"" + e.getMessage() + "\"}");
+            resp.getWriter().println("{\"status\": false, \"mensagem\": \"Ocorreu um erro no servidor.\", \"error\": \""
+                    + e.getMessage() + "\"}");
             e.printStackTrace();
-        } 
-    } 
+        }
+    }
 }
