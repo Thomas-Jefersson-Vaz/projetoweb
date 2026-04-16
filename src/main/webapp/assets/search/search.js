@@ -8,16 +8,16 @@ const loadingEl   = () => document.getElementById('loadingState');
 const countEl     = () => document.getElementById('resultsCount');
 const titleEl     = () => document.getElementById('resultsTitle');
 
-async function getLocations() {
-    try {
-        const res = await fetch('/api/locations');
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-    } catch (err) {
-        console.error('Erro ao buscar destinos:', err);
-        return [];
-    }
-}
+// async function getLocations() {
+//     try {
+//         const res = await fetch('/locations', {method: 'POST'});
+//         if (!res.ok) throw new Error(`HTTP ${res.status}`);
+//         return await res.json();
+//     } catch (err) {
+//         console.error('Erro ao buscar destinos:', err);
+//         return [];
+//     }
+// }
 
 async function search() {
     const name      = document.getElementById('search-name').value;
@@ -234,13 +234,7 @@ async function init() {
 
     const hasParams = parseUrlParams();
 
-    if (hasParams) {
-        await search();
-    } else {
-        allLocations = await getLocations();
-        showLoading(false);
-        applyFilterAndSort();
-    }
+    await search();
 }
 
 document.getElementById('btnSearch').addEventListener('click', search);
