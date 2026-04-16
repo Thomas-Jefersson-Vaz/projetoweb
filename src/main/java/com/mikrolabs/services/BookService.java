@@ -13,8 +13,8 @@ public class BookService {
 
     public void book(int locationId, User user){
         Book booking = new Book(
-            locationId,
             user.getId(),
+            locationId,
             LocalDate.now()
         );
 
