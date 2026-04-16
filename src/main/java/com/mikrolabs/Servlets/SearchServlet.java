@@ -2,7 +2,6 @@ package com.mikrolabs.Servlets;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import com.mikrolabs.DTO.LocationDTO;
@@ -27,7 +26,7 @@ public class SearchServlet extends BaseServlet<LocationService> {
      * GET /search → serve a página HTML de busca
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String token = CookieUtil.getJwt(req);
 
@@ -49,14 +48,6 @@ public class SearchServlet extends BaseServlet<LocationService> {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            String token = CookieUtil.getJwt(req);
-
-//            if (token == null || !JwtUtil.isValid(token)) {
-//                resp.sendRedirect(req.getContextPath() + "/login");
-//            } else {
-//                resp.setContentType("text/html");
-//                req.getRequestDispatcher("/search/index.html").forward(req, resp);
-//            }
 
             String name = req.getParameter("name");
             String start = req.getParameter("startDate");

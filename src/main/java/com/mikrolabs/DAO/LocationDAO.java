@@ -22,9 +22,9 @@ public interface LocationDAO extends BaseDAO<Location, Integer> {
 
     @SqlQuery("""
         SELECT * FROM locations\s
-        WHERE (:name IS NULL OR name ILIKE CONCAT('%', :name, '%'))
-          AND (:startDate IS NULL OR start_date >= :startDate)
-          AND (:endDate IS NULL OR end_date <= :endDate)
+        WHERE (:name IS NULL OR name ILIKE CONCAT('%', CAST(:name AS TEXT), '%'))
+          AND (CAST(:startDate AS DATE) IS NULL OR start_date >= CAST(:startDate AS DATE))
+          AND (CAST(:endDate AS DATE) IS NULL OR end_date <= CAST(:endDate AS DATE))
     """)
     List<Location> searchComplex(
         @Bind("name") String name,

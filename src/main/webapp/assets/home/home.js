@@ -96,32 +96,18 @@ async function init(){
     renderDestinations(locations);
     checkAdmin();
 }
+init()
+function getSearchPage(){
+    const url = new URL("/search",window.location.origin)
 
-/**
- * Pesquisa de acordo com o nome, data de inicio, e data de fim
- * No request deve retornar o tipo `Location[]`
- * @returns {Promise<void>}
- */
-async function search(){
-    const name = document.getElementById("search-name").value;
-    const startDate = document.getElementById("search-start-date").value;
-    const endDate = document.getElementById("search-end-date").value;
 
-    try{
-        const url = new URL("/api/search")
-        url.searchParams.append("name", name);
-        url.searchParams.append("startDate", startDate)
-        url.searchParams.append("endDate", endDate)
-        const response = await fetch(url.toString(), {method: "POST"});
-        if (!response.ok) {
-            throw new Error(`Erro ao buscar os destinos:", response.status);`)
-        }
-        const json = await response.json();
-        renderDestinations(json);
-    }catch (error) {
-        console.error(error);
-        renderDestinations([]);
-    }
+    const nameValue = document.getElementById("search-name").value;
+    const startValue = document.getElementById("search-start-date").value;
+    const endValue = document.getElementById("search-end-date").value;
+
+    url.searchParams.set("name", nameValue);
+    url.searchParams.set("startDate", startValue);
+    url.searchParams.set("endDate", endValue);
+
+    window.location.href = url.toString();
 }
-
-document.addEventListener("DOMContentLoaded", init);

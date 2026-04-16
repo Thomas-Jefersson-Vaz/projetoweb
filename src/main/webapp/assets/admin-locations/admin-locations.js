@@ -11,13 +11,12 @@ async function loadLocations() {
     loadEl.style.display = 'block';
 
     try {
-        const res = await fetch('/admin-locations', {
+        const res = await fetch('/locations', {
             method: 'GET',
-            headers: { 'Accept': 'application/json' } // Signal we want json not the HTML page in return
+            headers: { 'Accept': 'application/json' }
         });
 
         if (!res.ok) {
-            // Probably unauthenticated
             if(res.status === 401 || res.status === 403) {
                 window.location.href = '/login';
                 return;
@@ -25,7 +24,7 @@ async function loadLocations() {
             throw new Error('Falha ao carregar');
         }
 
-        const data = await res.json();
+        const data = (await res.json()).dados;
         
         loadEl.style.display = 'none';
 
@@ -78,7 +77,7 @@ async function handleAddDestination(e) {
     };
 
     try {
-        const res = await fetch('/admin-locations', {
+        const res = await fetch('/locations', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -107,7 +106,7 @@ async function deleteLocation(id) {
     if (!confirm('Deseja realmente remover este destino da plataforma?')) return;
 
     try {
-        const res = await fetch(`/admin-locations?id=${id}`, {
+        const res = await fetch(`/locations?id=${id}`, {
             method: 'DELETE'
         });
 

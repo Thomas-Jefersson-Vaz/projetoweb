@@ -73,6 +73,18 @@
         <version>0.12.3</version>
         <scope>runtime</scope>
     </dependency>
+    <!-- Source: https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-core</artifactId>
+      <version>12.3.0</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.flywaydb</groupId>
+      <artifactId>flyway-database-postgresql</artifactId>
+      <version>12.3.0</version>
+    </dependency>
   </dependencies>
 
   <build>

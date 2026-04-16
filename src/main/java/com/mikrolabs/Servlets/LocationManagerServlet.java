@@ -4,24 +4,21 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.mikrolabs.JwtUtil;
-import com.mikrolabs.controllers.CookieUtil;
 import com.mikrolabs.controllers.GsonUtil;
 import com.mikrolabs.entities.Location;
 import com.mikrolabs.services.LocationService;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/z")
+@WebServlet("/locations")
 public class LocationManagerServlet extends BaseServlet<LocationService> {
 
     private final Gson gson = GsonUtil.create();
 
-    protected LocationManagerServlet() {
+    public LocationManagerServlet() {
         super(new LocationService());
     }
 
@@ -41,7 +38,6 @@ public class LocationManagerServlet extends BaseServlet<LocationService> {
         String accept = req.getHeader("Accept");
         if (accept != null && accept.contains("application/json")) {
             try {
-                // USAMOS 'service' que herdamos da BaseServlet
                 List<Location> locations = service.findAll();
                 enviarSucesso(resp, "Lista carregada", locations);
             } catch (Exception e) {
@@ -61,7 +57,6 @@ public class LocationManagerServlet extends BaseServlet<LocationService> {
         }
 
         try {
-            // Usamos o gson que já está na BaseServlet
             Location newLoc = gson.fromJson(req.getReader(), Location.class);
 
             if (newLoc.getName() == null || newLoc.getCountry() == null) {
