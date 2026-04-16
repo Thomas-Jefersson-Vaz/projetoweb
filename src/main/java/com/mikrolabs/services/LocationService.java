@@ -1,7 +1,6 @@
 package com.mikrolabs.services;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 import com.mikrolabs.DatabaseManager;
@@ -38,8 +37,8 @@ public class LocationService {
      */
     public boolean insert(Location loc) {
         return locationDAO.insert(loc.getName(), loc.getCountry(), loc.getContinent(),
-                                  loc.getDescription(), loc.getPrice(), loc.getImageUrl(),
-                                  loc.getStartDate(), loc.getEndDate());
+                loc.getDescription(), loc.getPrice(), loc.getImageUrl(),
+                loc.getStartDate(), loc.getEndDate());
     }
 
     /**
