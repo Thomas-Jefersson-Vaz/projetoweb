@@ -66,17 +66,8 @@ async function search() {
     }
 }
 
-async function bookDestination(id) {
-    try {
-        const res = await fetch(`/api/destination/book/${id}`, { method: 'POST' });
-        if (!res.ok) throw new Error(`Erro ao reservar destino ${id}`);
-        const json = await res.json();
-        console.log('Reserva:', json);
-        showToast('Destino reservado com sucesso! ✈️');
-    } catch (err) {
-        console.error(err);
-        showToast('Erro ao reservar destino. Tente novamente.');
-    }
+function bookDestination(id) {
+    window.location.href = `/reserve/?id=${id}`;
 }
 
 function applyFilterAndSort() {
